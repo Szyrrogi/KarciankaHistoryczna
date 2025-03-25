@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8447841124590970115
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1241281455618918559, guid: 724e9f1062333914f9f0e8c2024dfccd, type: 3}
+      propertyPath: m_Name
+      value: InfantryCard Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 2951709909588240017, guid: 724e9f1062333914f9f0e8c2024dfccd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.336
+      objectReference: {fileID: 0}
+    - target: {fileID: 2951709909588240017, guid: 724e9f1062333914f9f0e8c2024dfccd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.023
+      objectReference: {fileID: 0}
+    - target: {fileID: 2951709909588240017, guid: 724e9f1062333914f9f0e8c2024dfccd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2951709909588240017, guid: 724e9f1062333914f9f0e8c2024dfccd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2951709909588240017, guid: 724e9f1062333914f9f0e8c2024dfccd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2951709909588240017, guid: 724e9f1062333914f9f0e8c2024dfccd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2951709909588240017, guid: 724e9f1062333914f9f0e8c2024dfccd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2951709909588240017, guid: 724e9f1062333914f9f0e8c2024dfccd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2951709909588240017, guid: 724e9f1062333914f9f0e8c2024dfccd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2951709909588240017, guid: 724e9f1062333914f9f0e8c2024dfccd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684448919202930369, guid: 724e9f1062333914f9f0e8c2024dfccd, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6d60a700faa91444e8ba1bedef7e2c5f, type: 3}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1241281455618918559, guid: 724e9f1062333914f9f0e8c2024dfccd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 618063238611036071}
+  m_SourcePrefab: {fileID: 100100000, guid: 724e9f1062333914f9f0e8c2024dfccd, type: 3}
+--- !u!1 &7207211131769482652 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1241281455618918559, guid: 724e9f1062333914f9f0e8c2024dfccd, type: 3}
+  m_PrefabInstance: {fileID: 8447841124590970115}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &618063238611036071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7207211131769482652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbc6ec05dcfbd03438f4d8f1e4048afc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cost: 10
+  cardName: Infantry
+  health: 6
+  attack: 4
