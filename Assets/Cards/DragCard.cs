@@ -6,19 +6,70 @@ public class DragCard : MonoBehaviour
     private float snapDistanceX = 24f; // Maksymalna odległość przyciągania w osi X
     private float snapDistanceZ = 3.5f; // Maksymalna odległość przyciągania w osi Z
 
-    private Vector3 startPosition;
     private bool isDragging = false;
     private Camera mainCamera;
 
+    public static GameObject ChosenCard;
+
     void Start()
     {
+        pole = ArenaManager.arenaManager.arena;
         mainCamera = Camera.main;
-        startPosition = transform.position;
+    }
+
+    Vector3 originalEuler;
+    Vector3 originalScale;
+    Vector3 originalPosition;
+
+    void OnMouseEnter()
+    {
+        Debug.Log("oooooooo");
+        if (ChosenCard == null && isDragging == false)
+        {
+            Debug.Log("eeee");
+            ChosenCard = this.gameObject;
+
+            // zapamiętujemy oryginalne wartości
+            originalEuler = transform.eulerAngles;
+            originalScale = transform.localScale;
+            originalPosition = transform.position;
+
+            // powiększamy
+            transform.localScale *= 1.4f;
+
+            // przesuwamy
+            transform.position = new Vector3(
+                transform.position.x,
+                transform.position.y + 0.02f,
+                transform.position.z - 3f
+            );
+
+            // ustawiamy rotację na 0 w osi Y
+            transform.eulerAngles = new Vector3(
+                transform.eulerAngles.x,
+                0f,
+                transform.eulerAngles.z
+            );
+        }
+    }
+
+    void OnMouseExit()
+    {
+        if (ChosenCard == this.gameObject && isDragging == false)
+        {
+            ChosenCard = null;
+
+            // przywracamy oryginalne wartości
+            transform.localScale = originalScale;
+            transform.position = originalPosition;
+            transform.eulerAngles = originalEuler;
+        }
     }
 
     void OnMouseDown()
     {
         isDragging = true;
+        OnMouseExit();
     }
 
     void OnMouseUp()
@@ -35,11 +86,11 @@ public class DragCard : MonoBehaviour
         // Sprawdzamy, czy mieści się w zakresie przyciągania
         if (diffX <= snapDistanceX && diffZ <= snapDistanceZ)
         {
-            transform.position = pole.transform.position; // Przyciągnięcie
+            BattleManager.battleManager.PutOnBattlefild(this.gameObject);
         }
         else
         {
-            transform.position = startPosition; // Powrót do startu
+            BattleManager.battleManager.ArrangeHand();
         }
     }
 
@@ -52,7 +103,7 @@ public class DragCard : MonoBehaviour
             if (plane.Raycast(ray, out float distance))
             {
                 Vector3 hitPoint = ray.GetPoint(distance);
-                transform.position = new Vector3(hitPoint.x, startPosition.y, hitPoint.z);
+                transform.position = new Vector3(hitPoint.x, transform.position.y, hitPoint.z);
             }
 
 
