@@ -23,10 +23,8 @@ public class DragCard : MonoBehaviour
 
     void OnMouseEnter() //powiększa
     {
-        Debug.Log("oooooooo");
-        if (ChosenCard == null && isDragging == false)
+        if (ChosenCard == null && isDragging == false && BattleManager.battleManager.Hand.Contains(this.gameObject))
         {
-            Debug.Log("eeee");
             ChosenCard = this.gameObject;
 
             // zapamiętujemy oryginalne wartości
@@ -68,8 +66,11 @@ public class DragCard : MonoBehaviour
 
     void OnMouseDown()  //klikniaesz
     {
-        isDragging = true;
-        OnMouseExit();
+        if(BattleManager.battleManager.Hand.Contains(this.gameObject))
+        {
+            isDragging = true;
+            OnMouseExit();
+        }
     }
 
     void OnMouseUp()    //spada

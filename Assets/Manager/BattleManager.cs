@@ -42,7 +42,10 @@ public class BattleManager : MonoBehaviour
                 DeckPosition.position.x - 0.02f * i, 
                 DeckPosition.position.y + 0.02f * i, 
                 DeckPosition.position.z ); 
-            GameObject newCard = Instantiate(CardPrefab, newPosition, Quaternion.identity, DeckPosition); 
+
+            Quaternion rotation = Quaternion.Euler(0, 0, 180);
+            
+            GameObject newCard = Instantiate(CardPrefab, newPosition, rotation, DeckPosition); 
             Deck.Add(newCard); 
         }
 
