@@ -21,7 +21,7 @@ public class DragCard : MonoBehaviour
     Vector3 originalScale;
     Vector3 originalPosition;
 
-    void OnMouseEnter()
+    void OnMouseEnter() //powiększa
     {
         Debug.Log("oooooooo");
         if (ChosenCard == null && isDragging == false)
@@ -40,7 +40,7 @@ public class DragCard : MonoBehaviour
             // przesuwamy
             transform.position = new Vector3(
                 transform.position.x,
-                transform.position.y + 0.02f,
+                transform.position.y + 0.1f,
                 transform.position.z - 3f
             );
 
@@ -53,7 +53,7 @@ public class DragCard : MonoBehaviour
         }
     }
 
-    void OnMouseExit()
+    void OnMouseExit()  //pomniejsza
     {
         if (ChosenCard == this.gameObject && isDragging == false)
         {
@@ -66,13 +66,13 @@ public class DragCard : MonoBehaviour
         }
     }
 
-    void OnMouseDown()
+    void OnMouseDown()  //klikniaesz
     {
         isDragging = true;
         OnMouseExit();
     }
 
-    void OnMouseUp()
+    void OnMouseUp()    //spada
     {
         isDragging = false;
 
@@ -94,7 +94,7 @@ public class DragCard : MonoBehaviour
         }
     }
 
-    void Update()
+    void Update()   //ruszać
     {
         if (isDragging)
         {

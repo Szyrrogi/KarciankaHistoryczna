@@ -63,9 +63,19 @@ public class BattleManager : MonoBehaviour
         //card.transform.position = new Vector3(10000f,0,0); NIE DZIAŁA
         GameObject newUnit = Instantiate(card.GetComponent<CardToPlay>().CardUnit, Battlefild.position, Quaternion.identity); 
         Battle.Add(newUnit);
+        CopyStats(card.GetComponent<Card>(), newUnit.GetComponent<Card>());
         card.SetActive(false);  //ZASTĘPSTWO
         ArrangeHand();
         ArrangeFild();
+    }
+
+    void CopyStats(Card Old, Card New)
+    {
+        New.Health = Old.Health;
+        New.MaxHealth = Old.MaxHealth;
+        New.Attack = Old.Attack;
+        New.MaxAttack = Old.MaxAttack;
+        New.SpriteCard = Old.SpriteCard;
     }
 
     public IEnumerator DrawMultipleCards(int count)
@@ -135,7 +145,7 @@ public class BattleManager : MonoBehaviour
             float posZ = HandCenter.position.z + Mathf.Abs(offsetFromCenter) * 0.3f; 
             float rotationY = HandCenter.rotation.eulerAngles.y + (i - (cardCount - 1) / 2f) * fanAngle;
 
-            Vector3 pos = new Vector3(posX, HandCenter.position.y + i * 0.02f, posZ);
+            Vector3 pos = new Vector3(posX, HandCenter.position.y + i * 0.05f, posZ);
             Vector3 rot = new Vector3(HandCenter.rotation.eulerAngles.x, rotationY, HandCenter.rotation.eulerAngles.z);
 
             card.transform.position = pos;

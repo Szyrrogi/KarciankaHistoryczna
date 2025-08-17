@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Card : MonoBehaviour
 {
@@ -19,10 +20,19 @@ public class Card : MonoBehaviour
     public Nation Nation;
     public Rarity Rarity;
 
+    public Image ImageCard;
+    public Sprite SpriteCard;
+
     protected virtual void Start()
     {
         Attack = MaxAttack;
         Health = MaxHealth;
+        ImageCard.sprite = SpriteCard;
+    }
+
+    protected void Update()
+    {
+        
     }
 
     protected virtual void AfterPut()
