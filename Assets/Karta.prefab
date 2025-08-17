@@ -663,7 +663,7 @@ MonoBehaviour:
   Attack: 0
   MaxAttack: 4
   Health: 0
-  MaxHealth: 5
+  MaxHealth: 100000
   Cost: 4
   Year: 1939
   Sort: 0
