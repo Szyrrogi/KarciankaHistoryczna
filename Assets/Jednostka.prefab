@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 150, y: -46.7}
-  m_SizeDelta: {x: 37.2, y: 42.5}
+  m_AnchoredPosition: {x: 160, y: -47.1}
+  m_SizeDelta: {x: 652.23, y: 38.755}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8455313513784726445
 CanvasRenderer:
@@ -361,6 +361,7 @@ MonoBehaviour:
   Name: 
   Description: 
   ID: 0
+  Enemy: 0
   Attack: 0
   MaxAttack: 0
   Health: 0
@@ -373,9 +374,11 @@ MonoBehaviour:
   Rarity: 0
   ImageCard: {fileID: 5083418416325287577}
   SpriteCard: {fileID: 0}
+  PopUpText: {fileID: 4864496853185178822, guid: 008817c926d6db248b49a13d971b4abe, type: 3}
   CardToPlay: {fileID: 4907848055614929421, guid: 4c36d8bacccec694e85dc08b1ae82704, type: 3}
   HealthText: {fileID: 8555704007967565605}
   AttackText: {fileID: 698256348278937046}
+  arrowPrefab: {fileID: 2787089911670626494, guid: 8831ae65317f8fb4d8b3a7ed0e384d6d, type: 3}
 --- !u!225 &408023090212823222
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -497,8 +500,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -162, y: -46.2}
-  m_SizeDelta: {x: 37.2, y: 42.5}
+  m_AnchoredPosition: {x: -156, y: -45.2}
+  m_SizeDelta: {x: 577.38, y: 35.117}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7672218251862064828
 CanvasRenderer:

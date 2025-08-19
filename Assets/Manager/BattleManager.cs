@@ -79,6 +79,7 @@ public class BattleManager : MonoBehaviour
         New.Attack = Old.Attack;
         New.MaxAttack = Old.MaxAttack;
         New.SpriteCard = Old.SpriteCard;
+        New.Enemy = Old.Enemy;
     }
 
     public IEnumerator DrawMultipleCards(int count)

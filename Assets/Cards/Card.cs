@@ -9,6 +9,8 @@ public class Card : MonoBehaviour
     public string Description;
     public int ID;
 
+    public bool Enemy;
+
     public int Attack;
     public int MaxAttack;
     public int Health;
@@ -22,6 +24,8 @@ public class Card : MonoBehaviour
 
     public Image ImageCard;
     public Sprite SpriteCard;
+
+    public GameObject PopUpText;
 
     protected virtual void Start()
     {
@@ -50,18 +54,22 @@ public class Card : MonoBehaviour
 
     }
 
-    public virtual void BeforAttack()
+    public virtual void BeforAttack(Card attacker)
     {
-
+        attacker.TakeDamage(this, Attack);
+        TakeDamage(attacker, attacker.Attack);
     }
 
-    public virtual void BeforTakeDamage()
+    public virtual void BeforTakeDamage(Card attacker)
     {
-
+        Debug.Log($"{attacker.name} atakuje {name}");
+        attacker.BeforAttack(this);
     }
 
-    public virtual void TakeDamage()
+    public virtual void TakeDamage(Card attacker, int Attack)
     {
+        Instantiate(PopUpText);
+        Health -= Attack;
         if(Health <= 0)
         {
             Agony();
