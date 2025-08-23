@@ -10,7 +10,7 @@ public class CardUnit : Card
     public TextMeshProUGUI HealthText;
     public TextMeshProUGUI AttackText;
 
-    private bool Action;
+    public GameObject ActionObject;
 
     public LineRenderer arrowPrefab; // Prefab strzałki
     private LineRenderer currentArrow;
@@ -18,10 +18,12 @@ public class CardUnit : Card
     private static CardUnit selectedCard; // Aktualnie wybrana karta (moja)
     private Camera cam;
     
+    public Transform parentObject;
 
 
     void Update()
     {
+        ActionObject.SetActive(Action);
         HealthText.text = Health.ToString();
         AttackText.text = Attack.ToString();
 
@@ -49,7 +51,7 @@ public class CardUnit : Card
 
     void OnMouseDown()
     {
-        if (!Enemy) // Kliknięcie mojej karty
+        if (!Enemy && Action) // Kliknięcie mojej karty
         {
             selectedCard = this;
 
@@ -95,5 +97,55 @@ public class CardUnit : Card
             Destroy(currentArrow.gameObject);
             selectedCard = null;
         }
+    }
+
+    public virtual void NextTurn()
+    {
+        Action = true;
+    }
+
+    public virtual void Agony()
+    {
+        gameObject.SetActive(false);
+    }   
+
+    public virtual void BattleCry()
+    {
+
+    }
+
+    public virtual void BeforAttack(CardUnit attacker)
+    {
+        Action = false;
+        attacker.TakeDamage(this, Attack);
+        TakeDamage(attacker, attacker.Attack);
+    }
+
+    public virtual void BeforTakeDamage(CardUnit attacker)
+    {
+        Debug.Log($"{attacker.name} atakuje {name}");
+        attacker.BeforAttack(this);
+    }
+
+    public virtual void TakeDamage(CardUnit attacker, int Attack)
+    {
+        GameObject newObj = Instantiate(PopUpText, parentObject);
+        newObj.GetComponent<TextMeshProUGUI>().text = Attack.ToString();
+
+        Health -= Attack;
+        if(Health <= 0)
+        {
+            Agony();
+        }
+    }
+
+    public virtual void AfterAttack()
+    {
+
+    }
+
+    public virtual void AfterTakeDamage()
+    {
+
     }
 }

@@ -25,6 +25,8 @@ public class Card : MonoBehaviour
     public Image ImageCard;
     public Sprite SpriteCard;
 
+    
+    protected bool Action;
     public GameObject PopUpText;
 
     protected virtual void Start()
@@ -44,47 +46,7 @@ public class Card : MonoBehaviour
 
     }
 
-    public virtual void Agony()
-    {
 
-    }
-
-    public virtual void BattleCry()
-    {
-
-    }
-
-    public virtual void BeforAttack(Card attacker)
-    {
-        attacker.TakeDamage(this, Attack);
-        TakeDamage(attacker, attacker.Attack);
-    }
-
-    public virtual void BeforTakeDamage(Card attacker)
-    {
-        Debug.Log($"{attacker.name} atakuje {name}");
-        attacker.BeforAttack(this);
-    }
-
-    public virtual void TakeDamage(Card attacker, int Attack)
-    {
-        Instantiate(PopUpText);
-        Health -= Attack;
-        if(Health <= 0)
-        {
-            Agony();
-        }
-    }
-
-    public virtual void AfterAttack()
-    {
-
-    }
-
-    public virtual void AfterTakeDamage()
-    {
-
-    }
 }
 
 public enum Effect

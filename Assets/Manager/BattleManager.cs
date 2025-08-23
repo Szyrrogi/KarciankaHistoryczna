@@ -56,6 +56,10 @@ public class BattleManager : MonoBehaviour
     public void NextTurn()
     {
         StartCoroutine(DrawMultipleCards(1));
+        foreach(GameObject card in Battle)
+        {
+            card.GetComponent<CardUnit>().NextTurn();
+        }
     }
 
     public void PutOnBattlefild(GameObject card)

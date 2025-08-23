@@ -108,17 +108,17 @@ public class DragCard : MonoBehaviour
             }
 
 
-            float diffX = Mathf.Abs(transform.position.x - pole.transform.position.x);
-            float diffZ = Mathf.Abs(transform.position.z - pole.transform.position.z);
-            // Zielony
-            if (diffX <= snapDistanceX && diffZ <= snapDistanceZ)
-            {
-                pole.GetComponent<Renderer>().material.color = Color.green;
-            }
-            else
-            {
-                pole.GetComponent<Renderer>().material.color = Color.white;
-            }
+    //         float diffX = Mathf.Abs(transform.position.x - pole.transform.position.x);
+    //         float diffZ = Mathf.Abs(transform.position.z - pole.transform.position.z);
+    //         // Zielony
+    //         if (diffX <= snapDistanceX && diffZ <= snapDistanceZ)
+    //         {
+    //             pole.GetComponent<Renderer>().material.color =  new Color(0, 1f, 0, 0.5f);
+    //         }
+    //         else
+    //         {
+    //             pole.GetComponent<Renderer>().material.color = Color.white;
+    //         }
 
         }
     }
