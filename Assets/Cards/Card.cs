@@ -49,43 +49,4 @@ public class Card : MonoBehaviour
 
 }
 
-public enum Effect
-{
-    Concealment,
-    Charge,
-    Poison,
-    Shield,
-    Immunity,
-    Trap,
-    Flanking,
-    Provocation,
-    Flamethrower,
-    AntiTank,
-    AntiAir,
-    AnimosityTheft,
-    WhiteFlag
-}
 
-public enum Sort
-{
-    Infantry,
-    Tank,
-    Aircraft
-}
-
-public enum Nation
-{
-    Allies,
-    Britain,
-    Axis,
-    Japan,
-    Italy,
-    Comintern,
-}
-
-public enum Rarity
-{
-    Common,
-    Rare,
-    Unusual
-}
