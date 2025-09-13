@@ -12,5 +12,6 @@ Za odbieranie i wysyłanie komunikatów i zarządzaniem stanem obiektów w grze 
 ### Dane kart
 Dane kart: nazwa, statystyki, efekty karty będą przechowywane wewnątrz scriptable object. Każda karta będzie miała swój unikalny GUID. 
 
+
 ### Tymczasowe działanie
 Dopóki nie zostanie zaimplementowana komunikacja online, architektura będzie działała w uproszczony sposób. Logika gry będzie działać bezpośrednio wewnątrz game managera.
