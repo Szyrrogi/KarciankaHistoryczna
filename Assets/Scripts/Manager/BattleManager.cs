@@ -19,15 +19,18 @@ public class BattleManager : MonoBehaviour
 
     private Game _game;
 
+    [HideInInspector]
     public List<GameObject> LocalPlayerHandCards; 
-    public List<GameObject> LocalPlayerGraveyardCards; 
-    public List<GameObject> LocalPlayerUsedCards; 
+    [HideInInspector]
+    public List<GameObject> LocalPlayerGraveyardCards;
+    [HideInInspector]
     public List<GameObject> LocalPlayerBattlefieldCards; 
 
-
-    public List<GameObject> EnemyPlayerHandCards; 
+    [HideInInspector]
+    public List<GameObject> EnemyPlayerHandCards;
+    [HideInInspector]
     public List<GameObject> EnemyPlayerGraveyardCards;
-    public List<GameObject> EnemyPlayerUsedCards;
+    [HideInInspector]
     public List<GameObject> EnemyPlayerBattlefieldCards;
 
 
@@ -35,12 +38,17 @@ public class BattleManager : MonoBehaviour
     public Transform LocalPlayerDeckPosition; // Pozycja stosu talii
     public Transform LocalPlayerHandCenter;   // Punkt środkowy wachlarza w ręce
     public Transform LocalPlayerBattlefield;
+    public Transform LocalPlayerGraveyardPosition;
+    public Transform LocalPlayerToDrawPosition;
 
 
     [Header("Enemy Player Card Positions")]
     public Transform EnemyPlayerDeckPosition; // Pozycja stosu talii
     public Transform EnemyPlayerHandCenter;   // Punkt środkowy wachlarza w ręce
     public Transform EnemyPlayerBattlefield;
+    public Transform EnemyPlayerGraveyardPosition;
+    public Transform EnemyPlayerToDrawPosition;
+
 
     public GameObject BattlefieldCardPrefab;
     public GameObject HandCardPrefab;
@@ -62,23 +70,6 @@ public class BattleManager : MonoBehaviour
 
     void Start()
     {
-        // // Tworzenie przykładowej talii
-        // for(int i = 0; i < 10; i++) 
-        // { 
-        //     Vector3 newPosition = new Vector3( 
-        //         LocalPlayerDeckPosition.position.x - 0.02f * i, 
-        //         LocalPlayerDeckPosition.position.y + 0.02f * i, 
-        //         LocalPlayerDeckPosition.position.z ); 
-
-        //     Quaternion rotation = Quaternion.Euler(0, 0, 180);
-
-        //     GameObject newCard = Instantiate(CardPrefab, newPosition, rotation, LocalPlayerDeckPosition); 
-        //     LocalPlayerDeckCards.Add(newCard); 
-        // }
-
-        // // Dobieramy na start np. 5 kart
-        // StartCoroutine(DrawMultipleCards(5));
-
         ProcessEvents(_game.HandleRequest(new StartGameRequest()));
     }
 
@@ -162,7 +153,7 @@ public class BattleManager : MonoBehaviour
             Vector3 pos = LocalPlayerDeckPosition.position;
             Quaternion rot = Quaternion.identity;
 
-            GameObject handCardObject = Instantiate(HandCardPrefab, pos, rot, LocalPlayerHandCenter);
+            GameObject handCardObject = Instantiate(HandCardPrefab, pos, rot, LocalPlayerToDrawPosition);
             handCardObject.GetComponent<HandCard>().Init(_game.GetCardByInstanceId(draw.InstanceCardId));
 
             StartCoroutine(DrawCardAnimation(handCardObject));
@@ -176,45 +167,27 @@ public class BattleManager : MonoBehaviour
 
 
 
-    public void NextTurn()
-    {
-        StartCoroutine(DrawMultipleCards(1));
-        foreach (GameObject card in LocalPlayerBattlefieldCards)
-        {
-            card.GetComponent<CardUnit>().NextTurn();
-        }
-    }
-
-    public void PutOnBattlefild(GameObject card)
-    {
-        DragCard.ChosenCard = null;
-        LocalPlayerUsedCards.Add(card);
-        LocalPlayerHandCards.Remove(card);
-        //card.transform.position = new Vector3(10000f,0,0); NIE DZIAŁA
-        GameObject newUnit = Instantiate(card.GetComponent<CardToPlay>().CardUnit, LocalPlayerBattlefield.position, Quaternion.identity);
-        LocalPlayerBattlefieldCards.Add(newUnit);
-        CopyStats(card.GetComponent<Card>(), newUnit.GetComponent<Card>());
-        card.SetActive(false);  //ZASTĘPSTWO
-        ArrangeHand();
-        ArrangeFild();
-    }
-
-    // void CopyStats(Card Old, Card New)
+    // public void NextTurn()
     // {
-    //     New.Health = Old.Health;
-    //     New.MaxHealth = Old.MaxHealth;
-    //     New.Attack = Old.Attack;
-    //     New.MaxAttack = Old.MaxAttack;
-    //     New.SpriteCard = Old.SpriteCard;
-    //     New.Enemy = Old.Enemy;
+    //     StartCoroutine(DrawMultipleCards(1));
+    //     foreach (GameObject card in LocalPlayerBattlefieldCards)
+    //     {
+    //         card.GetComponent<CardUnit>().NextTurn();
+    //     }
     // }
 
-    // public IEnumerator DrawMultipleCards(int count)
+    // public void PutOnBattlefild(GameObject card)
     // {
-    //     for (int i = 0; i < count; i++)
-    //     {
-    //         yield return StartCoroutine(DrawCardAnimation());
-    //     }
+    //     DragCard.ChosenCard = null;
+    //     LocalPlayerUsedCards.Add(card);
+    //     LocalPlayerHandCards.Remove(card);
+    //     //card.transform.position = new Vector3(10000f,0,0); NIE DZIAŁA
+    //     GameObject newUnit = Instantiate(card.GetComponent<CardToPlay>().CardUnit, LocalPlayerBattlefield.position, Quaternion.identity);
+    //     LocalPlayerBattlefieldCards.Add(newUnit);
+    //     CopyStats(card.GetComponent<Card>(), newUnit.GetComponent<Card>());
+    //     card.SetActive(false);  //ZASTĘPSTWO
+    //     ArrangeHand();
+    //     ArrangeFild();
     // }
 
     public IEnumerator DrawCardAnimation(GameObject card)

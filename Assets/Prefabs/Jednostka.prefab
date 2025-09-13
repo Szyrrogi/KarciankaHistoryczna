@@ -326,7 +326,6 @@ GameObject:
   - component: {fileID: 2474745947055575687}
   - component: {fileID: 8210730662676279162}
   - component: {fileID: 7854977344339348107}
-  - component: {fileID: 6379244609285884253}
   - component: {fileID: 408023090212823222}
   m_Layer: 0
   m_Name: Jednostka
@@ -422,41 +421,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6379244609285884253
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4907848055614929421}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68ff3f761b196d54ba8b3708d2fef050, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: 
-  Description: 
-  ID: 0
-  Enemy: 0
-  Attack: 0
-  MaxAttack: 0
-  Health: 0
-  MaxHealth: 0
-  Cost: 0
-  Year: 0
-  Sort: 0
-  Effects: 
-  Nation: 0
-  Rarity: 0
-  ImageCard: {fileID: 5083418416325287577}
-  SpriteCard: {fileID: 0}
-  PopUpText: {fileID: 2677106703503775835, guid: c1ebc9957a1e8ae4685df149de8ae582, type: 3}
-  CardToPlay: {fileID: 4907848055614929421, guid: 4c36d8bacccec694e85dc08b1ae82704, type: 3}
-  HealthText: {fileID: 8555704007967565605}
-  AttackText: {fileID: 698256348278937046}
-  ActionObject: {fileID: 4332545467091968020}
-  arrowPrefab: {fileID: 2787089911670626494, guid: 8831ae65317f8fb4d8b3a7ed0e384d6d, type: 3}
-  parentObject: {fileID: 9128846453047902888}
 --- !u!225 &408023090212823222
 CanvasGroup:
   m_ObjectHideFlags: 0
