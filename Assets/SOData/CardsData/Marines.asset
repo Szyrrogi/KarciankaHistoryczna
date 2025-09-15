@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80a7bc2b6c957204a91893c3f4f27c0d, type: 3}
   m_Name: Marines
   m_EditorClassIdentifier: 
-  id: 1
-  cardName: Marines
-  cost: 2
-  attack: 4
-  health: 3
-  rarity: 0
-  unitType: 0
-  nation: 0
+  Id: 0
+  CardName: Marines
+  Cost: 5
+  Attack: 10
+  Health: 10
+  Year: 1939
+  Rarity: 0
+  UnitType: 0
+  Nation: 0
+  CardSprite: {fileID: 21300000, guid: 82061be0fbb786044b52bd951e80de4c, type: 3}

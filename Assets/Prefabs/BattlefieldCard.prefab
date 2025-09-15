@@ -328,7 +328,7 @@ GameObject:
   - component: {fileID: 7854977344339348107}
   - component: {fileID: 408023090212823222}
   m_Layer: 0
-  m_Name: Jednostka
+  m_Name: BattlefieldCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using CardEngine.Enums;
 using CardEngine.GameEvents;
+using UnityEngine;
 using UnityEngine.TextCore;
 
 namespace CardEngine
@@ -15,22 +16,26 @@ namespace CardEngine
         public int Cost { get;  internal set; }
         public int Attack { get;  internal set; }
         public int Health { get; internal set; }
+        public int Year { get; internal set; }
         public Rarity Rarity { get; internal set; }
         public UnitType UnitType { get; internal set; }
         public Nation Nation { get; internal set; }
         public  bool MovedThisTurn { get; internal set; }
+        public Sprite CardSprite { get; internal set; }
 
         public Card(CardData data, int cardInstanceId)
         {
             CardInstanceId = cardInstanceId;
-            CardId = data.id;
-            CardName = data.cardName;
-            Cost = data.cost;
-            Attack = data.attack;
-            Health = data.health;
-            Rarity = data.rarity;
-            UnitType = data.unitType;
-            Nation = data.nation;
+            CardId = data.Id;
+            CardName = data.CardName;
+            Cost = data.Cost;
+            Attack = data.Attack;
+            Health = data.Health;
+            Year = data.Year;
+            Rarity = data.Rarity;
+            UnitType = data.UnitType;
+            Nation = data.Nation;
+            CardSprite = data.CardSprite;
 
             MovedThisTurn = false;
         }

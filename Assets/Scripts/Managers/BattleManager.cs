@@ -19,37 +19,28 @@ public class BattleManager : MonoBehaviour
 
     private Game _game;
 
-    [HideInInspector]
-    public List<GameObject> LocalPlayerHandCards; 
-    [HideInInspector]
-    public List<GameObject> LocalPlayerGraveyardCards;
-    [HideInInspector]
-    public List<GameObject> LocalPlayerBattlefieldCards; 
+    private List<GameObject> LocalPlayerHandCards; 
+    private List<GameObject> LocalPlayerGraveyardCards;
+    private List<GameObject> LocalPlayerBattlefieldCards; 
 
-    [HideInInspector]
-    public List<GameObject> EnemyPlayerHandCards;
-    [HideInInspector]
-    public List<GameObject> EnemyPlayerGraveyardCards;
-    [HideInInspector]
-    public List<GameObject> EnemyPlayerBattlefieldCards;
+    private List<GameObject> EnemyPlayerHandCards;
+    private List<GameObject> EnemyPlayerGraveyardCards;
+    private List<GameObject> EnemyPlayerBattlefieldCards;
 
-
-    [Header("Local Player Card Positions")]
-    public Transform LocalPlayerDeckPosition; // Pozycja stosu talii
-    public Transform LocalPlayerHandCenter;   // Punkt środkowy wachlarza w ręce
+    [Header("Local Player Card Objects")]
+    public Transform LocalPlayerDeck; 
+    public Transform LocalPlayerHand; 
     public Transform LocalPlayerBattlefield;
-    public Transform LocalPlayerGraveyardPosition;
-    public Transform LocalPlayerToDrawPosition;
+    public Transform LocalPlayerGraveyard;
 
-
-    [Header("Enemy Player Card Positions")]
-    public Transform EnemyPlayerDeckPosition; // Pozycja stosu talii
-    public Transform EnemyPlayerHandCenter;   // Punkt środkowy wachlarza w ręce
+    [Header("Enemy Player Card Objects")]
+    public Transform EnemyPlayerDeck; 
+    public Transform EnemyPlayerHand;       
     public Transform EnemyPlayerBattlefield;
-    public Transform EnemyPlayerGraveyardPosition;
-    public Transform EnemyPlayerToDrawPosition;
+    public Transform EnemyPlayerGraveyard;
 
 
+    [Header("Prefabs")]
     public GameObject BattlefieldCardPrefab;
     public GameObject HandCardPrefab;
 
@@ -65,6 +56,15 @@ public class BattleManager : MonoBehaviour
     void Awake()
     {
         battleManager = this;
+
+        LocalPlayerHandCards = new List<GameObject>();
+        LocalPlayerGraveyardCards = new List<GameObject>();
+        LocalPlayerBattlefieldCards = new List<GameObject>();
+
+        EnemyPlayerHandCards = new List<GameObject>();
+        EnemyPlayerGraveyardCards = new List<GameObject>();
+        EnemyPlayerBattlefieldCards = new List<GameObject>();
+
         _game = new Game(localPlayerDeck, enemyPlayerDeck);
     }
 
@@ -150,11 +150,14 @@ public class BattleManager : MonoBehaviour
     {
         if (draw.PlayerId == LOCAL_PLAYER_ID)
         {
-            Vector3 pos = LocalPlayerDeckPosition.position;
+            Vector3 pos = LocalPlayerDeck.position;
             Quaternion rot = Quaternion.identity;
 
-            GameObject handCardObject = Instantiate(HandCardPrefab, pos, rot, LocalPlayerToDrawPosition);
+            GameObject handCardObject = Instantiate(HandCardPrefab, pos, rot, LocalPlayerDeck);
+            Debug.Log("Drawing card with InstanceCardId: " + draw);
             handCardObject.GetComponent<HandCard>().Init(_game.GetCardByInstanceId(draw.InstanceCardId));
+
+            LocalPlayerHandCards.Add(handCardObject);
 
             StartCoroutine(DrawCardAnimation(handCardObject));
         }
@@ -195,7 +198,7 @@ public class BattleManager : MonoBehaviour
 
         // Animacja przejścia do ręki
         Vector3 startPos = card.transform.position;
-        Vector3 endPos = LocalPlayerHandCenter.position;
+        Vector3 endPos = LocalPlayerHand.position;
         Quaternion startRot = card.transform.rotation;
         Quaternion endRot = Quaternion.identity;
 
@@ -239,13 +242,13 @@ public class BattleManager : MonoBehaviour
         {
             float offsetFromCenter = i - (cardCount - 1) / 2f;
 
-            float posX = LocalPlayerHandCenter.position.x - (i - (cardCount - 1) / 2f) * fanRadius;
+            float posX = LocalPlayerHand.position.x - (i - (cardCount - 1) / 2f) * fanRadius;
             //float posZ = HandCenter.position.z - (i - (cardCount - 1) / 2f) * 0.3f;
-            float posZ = LocalPlayerHandCenter.position.z + Mathf.Abs(offsetFromCenter) * 0.3f;
-            float rotationY = LocalPlayerHandCenter.rotation.eulerAngles.y + (i - (cardCount - 1) / 2f) * fanAngle;
+            float posZ = LocalPlayerHand.position.z + Mathf.Abs(offsetFromCenter) * 0.3f;
+            float rotationY = LocalPlayerHand.rotation.eulerAngles.y + (i - (cardCount - 1) / 2f) * fanAngle;
 
-            Vector3 pos = new Vector3(posX, LocalPlayerHandCenter.position.y + i * 0.05f, posZ);
-            Vector3 rot = new Vector3(LocalPlayerHandCenter.rotation.eulerAngles.x, rotationY, LocalPlayerHandCenter.rotation.eulerAngles.z);
+            Vector3 pos = new Vector3(posX, LocalPlayerHand.position.y + i * 0.05f, posZ);
+            Vector3 rot = new Vector3(LocalPlayerHand.rotation.eulerAngles.x, rotationY, LocalPlayerHand.rotation.eulerAngles.z);
 
             card.transform.position = pos;
             card.transform.rotation = Quaternion.Euler(rot); // <-- zamiana na Quaternion

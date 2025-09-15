@@ -78,9 +78,9 @@ namespace CardEngine
         {
             List<GameEvent>events = new List<GameEvent>();
 
-            if (!isGameActive && !isGameOver)
+            if (isGameActive || isGameOver)
             {
-                UnityEngine.Debug.LogWarning("Game is over or inactive");
+                UnityEngine.Debug.LogWarning("Game can't be started again");
                 return events;
             }
 
@@ -274,7 +274,7 @@ namespace CardEngine
 
         private Card getCardByInstanceId(int instanceId, Player player)
         {
-            foreach (Card card in player.Battlefield)
+            foreach (Card card in player.Deck)
             {
                 if (card.CardInstanceId == instanceId)
                     return card;

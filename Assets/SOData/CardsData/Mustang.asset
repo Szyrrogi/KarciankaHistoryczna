@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80a7bc2b6c957204a91893c3f4f27c0d, type: 3}
   m_Name: Mustang
   m_EditorClassIdentifier: 
-  id: 2
-  cardName: Mustang
-  cost: 5
-  attack: 7
-  health: 2
-  rarity: 1
-  unitType: 2
-  nation: 0
+  Id: 1
+  CardName: Mustang
+  Cost: 20
+  Attack: 30
+  Health: 10
+  Year: 1942
+  Rarity: 0
+  UnitType: 2
+  Nation: 0
+  CardSprite: {fileID: 21300000, guid: 02bdc09f28e52a74ea57e886614d95ed, type: 3}
