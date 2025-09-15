@@ -129,7 +129,9 @@ public class BattleManager : MonoBehaviour
     }
 
     private void ProcessPutCardOnBattlefieldEvent(PutCardOnBattlefieldEvent putCard)
-    {
+    {   
+        
+        // Local Player
         if (putCard.PlayerId == LOCAL_PLAYER_ID)
         {
             GameObject cardToPlay = LocalPlayerHandCards.Find(card => card.GetComponent<HandCard>().InstanceId == putCard.InstanceCardId);
@@ -145,16 +147,35 @@ public class BattleManager : MonoBehaviour
                 Destroy(cardToPlay);
 
                 ArrangeLocalPlayerHand();
-                ArrangeFild();
+                ArrangeLocalPlayerField();
             }
             else
             {
                 Debug.LogWarning($"Card with InstanceId {putCard.InstanceCardId} not found in hand.");
             }
         }
+        // Enemy Player
         else
         {
-            // Obsługa dla przeciwnika (jeśli potrzebna)
+            GameObject cardToPlay = EnemyPlayerHandCards.Find(card => card.GetComponent<HandCard>().InstanceId == putCard.InstanceCardId);
+            if (cardToPlay != null)
+            {
+                EnemyPlayerHandCards.Remove(cardToPlay);
+
+                GameObject battlefieldCardObject = Instantiate(BattlefieldCardPrefab, EnemyPlayerBattlefield.position, Quaternion.identity, EnemyPlayerBattlefield);
+                battlefieldCardObject.GetComponent<BattlefieldCard>().Init(_game.GetCardByInstanceId(putCard.InstanceCardId));
+
+                EnemyPlayerBattlefieldCards.Add(battlefieldCardObject);
+
+                Destroy(cardToPlay);
+
+                ArrangeLocalPlayerHand();
+                ArrangeLocalPlayerField();
+            }
+            else
+            {
+                Debug.LogWarning($"Card with InstanceId {putCard.InstanceCardId} not found in hand.");
+            }
         }
     }
 
@@ -208,7 +229,7 @@ public class BattleManager : MonoBehaviour
 
             LocalPlayerHandCards.Add(handCardObject);
 
-            StartCoroutine(DrawCardAnimation(handCardObject));
+            StartCoroutine(DrawLocalPlayerCardAnimation(handCardObject));
         }
         else
         {
@@ -220,7 +241,7 @@ public class BattleManager : MonoBehaviour
 
             EnemyPlayerHandCards.Add(handCardObject);
 
-            StartCoroutine(DrawCardAnimation(handCardObject));
+            StartCoroutine(DrawEnemyCardAnimation(handCardObject));
         }
     }
 
@@ -254,33 +275,22 @@ public class BattleManager : MonoBehaviour
     //     ArrangeFild();
     // }
 
-    public IEnumerable DrawEnemyCardAnimation(GameObject card)
+
+
+
+    public IEnumerator DrawEnemyCardAnimation(GameObject card)
     {
-        // Animacja przejścia do ręki
-        Vector3 startPos = card.transform.position;
-        Vector3 endPos = EnemyPlayerHand.position;
-        Quaternion startRot = card.transform.rotation;
-        Quaternion endRot = Quaternion.identity;
-
-        float t = 0;
-        while (t < drawDuration)
-        {
-            t += Time.deltaTime;
-            float lerp = t / drawDuration;
-
-            card.transform.position = Vector3.Lerp(startPos, endPos, lerp);
-            card.transform.rotation = Quaternion.Lerp(startRot, endRot, lerp);
-            yield return null;
-        }
-
+        yield return DrawCardAnimation(card, EnemyPlayerDeck.position, EnemyPlayerHand.position);
         ArrangeEnemyHand();
     }
-    public IEnumerator DrawCardAnimation(GameObject card)
+    public IEnumerator DrawLocalPlayerCardAnimation(GameObject card)
     {
-
-        // Animacja przejścia do ręki
-        Vector3 startPos = card.transform.position;
-        Vector3 endPos = LocalPlayerHand.position;
+        yield return DrawCardAnimation(card, LocalPlayerDeck.position, LocalPlayerHand.position);
+        ArrangeLocalPlayerHand();
+    }
+    public IEnumerator DrawCardAnimation(GameObject card, Vector3 startPos, Vector3 endPos)
+    {
+        // Animacja przejścia do ręki`
         Quaternion startRot = card.transform.rotation;
         Quaternion endRot = Quaternion.identity;
 
@@ -294,25 +304,37 @@ public class BattleManager : MonoBehaviour
             card.transform.rotation = Quaternion.Lerp(startRot, endRot, lerp);
             yield return null;
         }
-
-        ArrangeLocalPlayerHand();
     }
 
-    public void ArrangeFild()
+    public void ArrangeLocalPlayerField()
     {
-        int cardCount = LocalPlayerBattlefieldCards.Count;
+        ArrangeField(isLocalPlayer: true);
+    }
+
+    public void ArrangeLEnemyField()
+    {
+        ArrangeField(isLocalPlayer: false);
+    }
+
+    public void ArrangeField(bool isLocalPlayer)
+    {
+        List<GameObject> BattlefieldCards = isLocalPlayer ? this.LocalPlayerBattlefieldCards : this.EnemyPlayerBattlefieldCards;
+        Transform Battlefield = isLocalPlayer ? this.LocalPlayerBattlefield : this.EnemyPlayerBattlefield;
+        int cardCount = BattlefieldCards.Count;
         if (cardCount == 0) return;
 
         int i = 0;
-        foreach (GameObject card in LocalPlayerBattlefieldCards)
+        foreach (GameObject card in BattlefieldCards)
         {
             float posX = LocalPlayerBattlefield.position.x - (i - (cardCount - 1) / 2f) * 8f;
-            Vector3 pos = new Vector3(posX, LocalPlayerBattlefield.position.y, LocalPlayerBattlefield.position.z);
+            Vector3 pos = new Vector3(posX, Battlefield.position.y, Battlefield.position.z);
 
             card.transform.position = pos;
             i++;
         }
     }
+
+
 
 
     public void ArrangeLocalPlayerHand()
@@ -322,12 +344,12 @@ public class BattleManager : MonoBehaviour
     public void ArrangeEnemyHand()
     {
         ArrangeHand(isLocalPlayer: false);
-    } 
+    }
 
-    private void ArrangeHand(bool isLocalPlayer)
+    public void ArrangeHand(bool isLocalPlayer)
     {
         List<GameObject> handCards = isLocalPlayer ? LocalPlayerHandCards : EnemyPlayerHandCards;
-        Transform handRoot         = isLocalPlayer ? LocalPlayerHand      : EnemyPlayerHand;
+        Transform handRoot = isLocalPlayer ? LocalPlayerHand : EnemyPlayerHand;
 
         int count = handCards.Count;
         if (count == 0) return;
@@ -354,30 +376,31 @@ public class BattleManager : MonoBehaviour
             handCards[i].transform.SetPositionAndRotation(pos, rot);
         }
 
-    // private void ArrangeHand(bool isLocalPlayer)
-    // {
-    //     List<GameObject> handCards = isLocalPlayer ? LocalPlayerHandCards : EnemyPlayerHandCards;
+        // private void ArrangeHand(bool isLocalPlayer)
+        // {
+        //     List<GameObject> handCards = isLocalPlayer ? LocalPlayerHandCards : EnemyPlayerHandCards;
 
-    //     int cardCount = handCards.Count;
-    //     if (cardCount == 0) return;
+        //     int cardCount = handCards.Count;
+        //     if (cardCount == 0) return;
 
-    //     int i = 0;
-    //     foreach (GameObject card in handCards)
-    //     {
-    //         float offsetFromCenter = i - (cardCount - 1) / 2f;
+        //     int i = 0;
+        //     foreach (GameObject card in handCards)
+        //     {
+        //         float offsetFromCenter = i - (cardCount - 1) / 2f;
 
-    //         float posX = LocalPlayerHand.position.x - (i - (cardCount - 1) / 2f) * fanRadius;
-    //         //float posZ = HandCenter.position.z - (i - (cardCount - 1) / 2f) * 0.3f;
-    //         float posZ = LocalPlayerHand.position.z + Mathf.Abs(offsetFromCenter) * 0.3f;
-    //         float rotationY = LocalPlayerHand.rotation.eulerAngles.y + (i - (cardCount - 1) / 2f) * fanAngle;
+        //         float posX = LocalPlayerHand.position.x - (i - (cardCount - 1) / 2f) * fanRadius;
+        //         //float posZ = HandCenter.position.z - (i - (cardCount - 1) / 2f) * 0.3f;
+        //         float posZ = LocalPlayerHand.position.z + Mathf.Abs(offsetFromCenter) * 0.3f;
+        //         float rotationY = LocalPlayerHand.rotation.eulerAngles.y + (i - (cardCount - 1) / 2f) * fanAngle;
 
-    //         Vector3 pos = new Vector3(posX, LocalPlayerHand.position.y + i * 0.05f, posZ);
-    //         Vector3 rot = new Vector3(LocalPlayerHand.rotation.eulerAngles.x, rotationY, LocalPlayerHand.rotation.eulerAngles.z);
+        //         Vector3 pos = new Vector3(posX, LocalPlayerHand.position.y + i * 0.05f, posZ);
+        //         Vector3 rot = new Vector3(LocalPlayerHand.rotation.eulerAngles.x, rotationY, LocalPlayerHand.rotation.eulerAngles.z);
 
-    //         card.transform.position = pos;
-    //         card.transform.rotation = Quaternion.Euler(rot); // <-- zamiana na Quaternion
-    //         i++;
+        //         card.transform.position = pos;
+        //         card.transform.rotation = Quaternion.Euler(rot); // <-- zamiana na Quaternion
+        //         i++;
 
-    //     }
-    // }
+        //     }
+        // }
+    }
 }

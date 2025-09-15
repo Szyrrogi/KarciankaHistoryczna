@@ -1,10 +1,12 @@
+using System.Collections.Generic;
+using CardEngine;
 using CardEngine.GameEvents;
 using CardEngine.RequestEvents;
 using UnityEngine;
 
 public class DragCard : MonoBehaviour
 {
-    private GameObject battlefield;       // Pole, do którego karta ma się przyciągnąć
+    //private GameObject battlefield;       // Pole, do którego karta ma się przyciągnąć
     private float snapDistanceX = 24f; // Maksymalna odległość przyciągania w osi X
     private float snapDistanceZ = 3.5f; // Maksymalna odległość przyciągania w osi Z
 
@@ -20,14 +22,14 @@ public class DragCard : MonoBehaviour
 
     void Start()
     {
-        battlefield = BattleManager.battleManager.LocalPlayerBattlefield?.gameObject;
+        //battlefield = BattleManager.battleManager.LocalPlayerBattlefield?.gameObject;
         mainCamera = Camera.main;
     }
-
-
     void OnMouseEnter() //powiększa
     {
-        if (ChosenCard == null && isDragging == false && BattleManager.battleManager.LocalPlayerHandCards.Contains(this.gameObject))
+        List<GameObject> HandCards = BattleManager.battleManager.LocalPlayerHandCards.Contains(this.gameObject) ? BattleManager.battleManager.LocalPlayerHandCards : BattleManager.battleManager.EnemyPlayerHandCards;
+
+        if (ChosenCard == null && isDragging == false && HandCards.Contains(this.gameObject))
         {
             ChosenCard = this.gameObject;
 
@@ -70,7 +72,7 @@ public class DragCard : MonoBehaviour
 
     void OnMouseDown()  //klikniaesz
     {
-        if(BattleManager.battleManager.LocalPlayerHandCards.Contains(this.gameObject))
+        if(BattleManager.battleManager.LocalPlayerHandCards.Contains(this.gameObject) ? BattleManager.battleManager.LocalPlayerHandCards.Contains(this.gameObject) : BattleManager.battleManager.EnemyPlayerHandCards.Contains(this.gameObject))
         {
             isDragging = true;
             OnMouseExit();
@@ -79,6 +81,8 @@ public class DragCard : MonoBehaviour
 
     void OnMouseUp()    //spada
     {
+        GameObject battlefield = BattleManager.battleManager.LocalPlayerHandCards.Contains(this.gameObject) ? BattleManager.battleManager.LocalPlayerBattlefield?.gameObject : BattleManager.battleManager.EnemyPlayerBattlefield?.gameObject;
+
         isDragging = false;
 
         // Liczymy różnicę w X i Z
@@ -96,7 +100,7 @@ public class DragCard : MonoBehaviour
             BattleManager.battleManager.SendRequestEvent(new PutCardOnBattlefieldRequest(GetComponent<HandCard>().InstanceId));
            // BattleManager.battleManager.PutOnBattlefild(this.gameObject);
         }
-        BattleManager.battleManager.ArrangeLocalPlayerHand();
+        BattleManager.battleManager.ArrangeHand(isLocalPlayer: this.GetComponent<HandCard>().Card.OwnerId == BattleManager.LOCAL_PLAYER_ID);
     }
 
     void Update()   //ruszać
