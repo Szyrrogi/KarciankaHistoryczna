@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8455313513784726445}
   - component: {fileID: 8555704007967565605}
   m_Layer: 5
-  m_Name: Zdrowie
+  m_Name: HealthText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -327,6 +327,7 @@ GameObject:
   - component: {fileID: 8210730662676279162}
   - component: {fileID: 7854977344339348107}
   - component: {fileID: 408023090212823222}
+  - component: {fileID: 1589355681332392366}
   m_Layer: 0
   m_Name: BattlefieldCard
   m_TagString: Untagged
@@ -344,7 +345,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.099999994, z: 0.69}
-  m_LocalScale: {x: 6.0102253, y: 0.014651881, z: 9.5}
+  m_LocalScale: {x: 1.510225, y: 0.01065188, z: 9.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9128846453047902888}
@@ -433,6 +434,24 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1589355681332392366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4907848055614929421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c1821c592cd02f4e95d2c2338dd48bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HealthText: {fileID: 8555704007967565605}
+  AttackText: {fileID: 698256348278937046}
+  CardImage: {fileID: 5083418416325287577}
+  ActionObject: {fileID: 0}
+  arrowPrefab: {fileID: 2787089911670626494, guid: 8831ae65317f8fb4d8b3a7ed0e384d6d, type: 3}
+  parentObject: {fileID: 0}
 --- !u!1 &6014067253984450932
 GameObject:
   m_ObjectHideFlags: 0
@@ -445,7 +464,7 @@ GameObject:
   - component: {fileID: 4061132538570682880}
   - component: {fileID: 5083418416325287577}
   m_Layer: 5
-  m_Name: Image
+  m_Name: CardImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -520,7 +539,7 @@ GameObject:
   - component: {fileID: 7672218251862064828}
   - component: {fileID: 698256348278937046}
   m_Layer: 5
-  m_Name: Atak
+  m_Name: AttackText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

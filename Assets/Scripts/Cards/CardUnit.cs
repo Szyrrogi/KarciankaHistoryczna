@@ -97,7 +97,7 @@
 //             Destroy(currentArrow.gameObject);
 //             selectedCard = null;
 //         }
-//     }
+
 
 //     public virtual void NextTurn()
 //     {

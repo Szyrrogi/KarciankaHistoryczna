@@ -31,7 +31,7 @@ namespace CardEngine
             lastCardInstanceId = 0;
 
             // Initialize players with decks
-            List<Card> firstPlayerDeck = createDeck(firstDeck);
+            List<Card> firstPlayerDeck = createDeck(firstDeck, FIRST_PLAYER_ID);
             firstPlayer = new Player
             {
                 Id = FIRST_PLAYER_ID,
@@ -42,7 +42,7 @@ namespace CardEngine
                 Graveyard = new List<Card>()
             };
 
-            List<Card> secondPlayerDeck = createDeck(secondDeck);
+            List<Card> secondPlayerDeck = createDeck(secondDeck, SECOND_PLAYER_ID);
             secondPlayer = new Player
             {
                 Id = SECOND_PLAYER_ID,
@@ -163,7 +163,7 @@ namespace CardEngine
                 return events;
             }
 
-            if (!currentPlayer.Battlefield.Contains(card))
+            if (!currentPlayer.Hand.Contains(card))
             {
                 UnityEngine.Debug.LogWarning("It's not the player's turn");
                 return events;
@@ -241,6 +241,7 @@ namespace CardEngine
                 return events; // No cards to draw
             }
             Card drawnCard = player.ToDraw.Pop();
+            player.Hand.Add(drawnCard);
             events.Add(new DrawCardEvent(player.Id, drawnCard.CardId, drawnCard.CardInstanceId));
             return events;
         }
@@ -282,14 +283,14 @@ namespace CardEngine
 
             return null; // Card not found
         }
-        private List<Card> createDeck(DeckData deckData)
+        private List<Card> createDeck(DeckData deckData, int ownerId)
         {
             List<Card> deck = new List<Card>();
 
             // Add cards to the deck based on the DeckData
             foreach (var cardData in deckData.cards)
             {
-                deck.Add(new Card(cardData, ++lastCardInstanceId));
+                deck.Add(new Card(cardData, ++lastCardInstanceId, ownerId));
             }
 
             return deck;

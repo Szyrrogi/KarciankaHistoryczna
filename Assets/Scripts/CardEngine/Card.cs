@@ -12,6 +12,7 @@ namespace CardEngine
     {
         public int CardInstanceId { get; internal set; }
         public int CardId { get; internal set; }
+        public int OwnerId { get; internal set; }
         public string CardName { get; internal set; }
         public int Cost { get;  internal set; }
         public int Attack { get;  internal set; }
@@ -23,10 +24,10 @@ namespace CardEngine
         public  bool MovedThisTurn { get; internal set; }
         public Sprite CardSprite { get; internal set; }
 
-        public Card(CardData data, int cardInstanceId)
+        public Card(CardData data, int cardInstanceId, int ownerId)
         {
             CardInstanceId = cardInstanceId;
-            CardId = data.Id;
+            OwnerId = ownerId;
             CardName = data.CardName;
             Cost = data.Cost;
             Attack = data.Attack;

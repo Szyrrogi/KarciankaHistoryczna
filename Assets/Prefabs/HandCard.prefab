@@ -656,6 +656,7 @@ GameObject:
   - component: {fileID: 7854977344339348107}
   - component: {fileID: 408023090212823222}
   - component: {fileID: 706883018644901917}
+  - component: {fileID: 8071594212547687724}
   m_Layer: 0
   m_Name: HandCard
   m_TagString: Untagged
@@ -781,6 +782,19 @@ MonoBehaviour:
   NameText: {fileID: 1356619051464610636}
   YearText: {fileID: 4350460282016271308}
   CardImage: {fileID: 702638958436759965}
+--- !u!114 &8071594212547687724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4907848055614929421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cf0087e64461c945909caa067358194, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pole: {fileID: 0}
 --- !u!1 &4925558434571918853
 GameObject:
   m_ObjectHideFlags: 0

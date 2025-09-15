@@ -8,33 +8,29 @@ using TMPro;
 public class HandCard : MonoBehaviour
 {
 
-    private Card _card;
+    public Card Card;
 
     public TextMeshProUGUI HealthText;
     public TextMeshProUGUI AttackText;
     public TextMeshProUGUI CostText;
     public TextMeshProUGUI NameText;
-
     public TextMeshProUGUI YearText;
     public Image CardImage;
 
+    public int InstanceId { get; private set; }
+
+
     public void Init(Card data)
     {
-        _card = data;
+        Card = data;
+        InstanceId = Card.CardInstanceId;
 
-    Debug.Log($"Card Name: '{_card.CardName}'");
-    Debug.Log($"Health: {_card.Health}");
-    Debug.Log($"Attack: {_card.Attack}");
-    Debug.Log($"Cost: {_card.Cost}");
-    Debug.Log($"Year: {_card.Year}");
-    Debug.Log($"Sprite: {_card.CardSprite?.name}");
-
-        HealthText.text = _card.Health.ToString();
-        AttackText.text = _card.Attack.ToString();
-        CostText.text = _card.Cost.ToString();
-        YearText.text = _card.Year.ToString();
-        NameText.text = _card.CardName;
-        CardImage.sprite = _card.CardSprite;
+        HealthText.text = Card.Health.ToString();
+        AttackText.text = Card.Attack.ToString();
+        CostText.text = Card.Cost.ToString();
+        YearText.text = Card.Year.ToString();
+        NameText.text = Card.CardName;
+        CardImage.sprite = Card.CardSprite;
     }
     protected virtual void Start()
     {
@@ -43,11 +39,4 @@ public class HandCard : MonoBehaviour
     {
         
     }
-
-    protected virtual void AfterPut()
-    {
-
-    }
-
-
 }

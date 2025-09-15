@@ -122,63 +122,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &87122189
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4282404776631547690, guid: a2734beec3d99384d95631e85aadd36f, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -24.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 4282404776631547690, guid: a2734beec3d99384d95631e85aadd36f, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.099999994
-      objectReference: {fileID: 0}
-    - target: {fileID: 4282404776631547690, guid: a2734beec3d99384d95631e85aadd36f, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 10.84
-      objectReference: {fileID: 0}
-    - target: {fileID: 4282404776631547690, guid: a2734beec3d99384d95631e85aadd36f, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4282404776631547690, guid: a2734beec3d99384d95631e85aadd36f, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4282404776631547690, guid: a2734beec3d99384d95631e85aadd36f, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4282404776631547690, guid: a2734beec3d99384d95631e85aadd36f, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4282404776631547690, guid: a2734beec3d99384d95631e85aadd36f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4282404776631547690, guid: a2734beec3d99384d95631e85aadd36f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4282404776631547690, guid: a2734beec3d99384d95631e85aadd36f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4907848055614929421, guid: a2734beec3d99384d95631e85aadd36f, type: 3}
-      propertyPath: m_Name
-      value: BattlefieldCard
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: a2734beec3d99384d95631e85aadd36f, type: 3}
 --- !u!1 &127052094
 GameObject:
   m_ObjectHideFlags: 0
@@ -445,6 +388,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 308267391}
   m_CullTransparentMesh: 1
+--- !u!1001 &502355405
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4282404776631547690, guid: 4c36d8bacccec694e85dc08b1ae82704, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4282404776631547690, guid: 4c36d8bacccec694e85dc08b1ae82704, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.099999994
+      objectReference: {fileID: 0}
+    - target: {fileID: 4282404776631547690, guid: 4c36d8bacccec694e85dc08b1ae82704, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.69
+      objectReference: {fileID: 0}
+    - target: {fileID: 4282404776631547690, guid: 4c36d8bacccec694e85dc08b1ae82704, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4282404776631547690, guid: 4c36d8bacccec694e85dc08b1ae82704, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4282404776631547690, guid: 4c36d8bacccec694e85dc08b1ae82704, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4282404776631547690, guid: 4c36d8bacccec694e85dc08b1ae82704, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4282404776631547690, guid: 4c36d8bacccec694e85dc08b1ae82704, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4282404776631547690, guid: 4c36d8bacccec694e85dc08b1ae82704, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4282404776631547690, guid: 4c36d8bacccec694e85dc08b1ae82704, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4907848055614929421, guid: 4c36d8bacccec694e85dc08b1ae82704, type: 3}
+      propertyPath: m_Name
+      value: HandCard
+      objectReference: {fileID: 0}
+    - target: {fileID: 8071594212547687724, guid: 4c36d8bacccec694e85dc08b1ae82704, type: 3}
+      propertyPath: pole
+      value: 
+      objectReference: {fileID: 225189307}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4c36d8bacccec694e85dc08b1ae82704, type: 3}
 --- !u!1 &666587529
 GameObject:
   m_ObjectHideFlags: 0
@@ -944,6 +948,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be3a3ad6c220b2241afe6a6b0349ca2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LocalPlayerHandCards: []
+  LocalPlayerGraveyardCards: []
+  LocalPlayerBattlefieldCards: []
+  EnemyPlayerHandCards: []
+  EnemyPlayerGraveyardCards: []
+  EnemyPlayerBattlefieldCards: []
   LocalPlayerDeck: {fileID: 1356158177}
   LocalPlayerHand: {fileID: 1956481510}
   LocalPlayerBattlefield: {fileID: 1009441059}
@@ -952,7 +962,7 @@ MonoBehaviour:
   EnemyPlayerHand: {fileID: 0}
   EnemyPlayerBattlefield: {fileID: 0}
   EnemyPlayerGraveyard: {fileID: 0}
-  BattlefieldCardPrefab: {fileID: 0}
+  BattlefieldCardPrefab: {fileID: 4907848055614929421, guid: a2734beec3d99384d95631e85aadd36f, type: 3}
   HandCardPrefab: {fileID: 4907848055614929421, guid: 4c36d8bacccec694e85dc08b1ae82704, type: 3}
   localPlayerDeck: {fileID: 11400000, guid: 6f6bdc1529828ea4b9c8b126b7b1c49f, type: 2}
   enemyPlayerDeck: {fileID: 11400000, guid: 6f6bdc1529828ea4b9c8b126b7b1c49f, type: 2}
@@ -1119,4 +1129,4 @@ SceneRoots:
   - {fileID: 666587531}
   - {fileID: 2108104123}
   - {fileID: 1473119310}
-  - {fileID: 87122189}
+  - {fileID: 502355405}
