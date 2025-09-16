@@ -442,7 +442,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1473119312}
         m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
-        m_MethodName: NextTurn
+        m_MethodName: SendNextTurnRequest
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

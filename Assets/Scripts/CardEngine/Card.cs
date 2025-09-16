@@ -40,10 +40,5 @@ namespace CardEngine
 
             MovedThisTurn = false;
         }
-
-        internal bool CanAttack(Card defender)
-        {
-            return !MovedThisTurn; // Tymczasowo zawsze mozna atakowac
-        }
     }
 }

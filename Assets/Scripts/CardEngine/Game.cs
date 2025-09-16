@@ -74,9 +74,9 @@ namespace CardEngine
                 _ => new List<GameEvent>()
             };
         }
-        private List<GameEvent>ProcessStartGameRequest()
+        private List<GameEvent> ProcessStartGameRequest()
         {
-            List<GameEvent>events = new List<GameEvent>();
+            List<GameEvent> events = new List<GameEvent>();
 
             if (isGameActive || isGameOver)
             {
@@ -90,9 +90,9 @@ namespace CardEngine
 
 
         // Sprawdza, czy jednostka może zaatakować. Jeśli tak, wywoływana jest metoda Attack
-        public List<GameEvent>ProcessAttackUnitRequest(int attackerInstanceId, int defenderInstanceId)
+        public List<GameEvent> ProcessAttackUnitRequest(int attackerInstanceId, int defenderInstanceId)
         {
-            List<GameEvent>events = new List<GameEvent>();
+            List<GameEvent> events = new List<GameEvent>();
 
             if (!isGameActive)
             {
@@ -123,9 +123,9 @@ namespace CardEngine
             return events;
         }
 
-        public List<GameEvent>ProcessEndTurnRequest(int playerId)
+        public List<GameEvent> ProcessEndTurnRequest(int playerId)
         {
-            List<GameEvent>events = new List<GameEvent>();
+            List<GameEvent> events = new List<GameEvent>();
 
             if (!isGameActive)
             {
@@ -145,9 +145,9 @@ namespace CardEngine
             return events;
         }
 
-        public List<GameEvent>ProcessPutCardOnBattlefieldRequest(int cardInstanceId)
+        public List<GameEvent> ProcessPutCardOnBattlefieldRequest(int cardInstanceId)
         {
-            List<GameEvent>events = new List<GameEvent>();
+            List<GameEvent> events = new List<GameEvent>();
 
             if (!isGameActive)
             {
@@ -179,13 +179,13 @@ namespace CardEngine
         //W tej sekcji są metody realizujące zglaszne requesty
         #region Game Logic
 
-        private List<GameEvent>StartGame()
+        private List<GameEvent> StartGame()
         {
-            List<GameEvent>events = new List<GameEvent>();
+            List<GameEvent> events = new List<GameEvent>();
             isGameActive = true;
 
-            firstPlayer.Deck.ShuffleCrypto();
-            secondPlayer.Deck.ShuffleCrypto();
+            firstPlayer.ToDraw.ShuffleCrypto();
+            secondPlayer.ToDraw.ShuffleCrypto();
 
 
             for (int i = 0; i < INITIAL_HAND_SIZE; i++)
@@ -198,9 +198,9 @@ namespace CardEngine
             return events;
         }
 
-        private IEnumerable<GameEvent>PutCardOnBattlefield(Card card)
+        private IEnumerable<GameEvent> PutCardOnBattlefield(Card card)
         {
-            List<GameEvent>events = new List<GameEvent>();
+            List<GameEvent> events = new List<GameEvent>();
 
             Player currentPlayer = GetCurrentPlayer();
 
@@ -212,9 +212,9 @@ namespace CardEngine
             return events;
         }
 
-        private List<GameEvent>EndTurn()
+        private List<GameEvent> EndTurn()
         {
-            List<GameEvent>events = new List<GameEvent>();
+            List<GameEvent> events = new List<GameEvent>();
 
             isFirstPlayerTurn = !isFirstPlayerTurn;
             if (isFirstPlayerTurn)
@@ -232,9 +232,9 @@ namespace CardEngine
             events.AddRange(DrawCard(currentPlayer));
             return events;
         }
-        private List<GameEvent>DrawCard(Player player)
+        private List<GameEvent> DrawCard(Player player)
         {
-            List<GameEvent>events = new List<GameEvent>();
+            List<GameEvent> events = new List<GameEvent>();
 
             if (player.ToDraw.Count == 0)
             {
@@ -246,44 +246,51 @@ namespace CardEngine
             events.Add(new DrawCardEvent(player.Id, drawnCard.CardId, drawnCard.CardInstanceId));
             return events;
         }
-        private List<GameEvent>AttackCard(Card attacker, Card defender)
+        private List<GameEvent> AttackCard(Card attacker, Card defender)
         {
-            List<GameEvent>events = new List<GameEvent>();
+            List<GameEvent> events = new List<GameEvent>();
 
-            if (attacker.CanAttack(defender))
+            if (CanAttackEnemy(attacker.CardInstanceId, defender.CardInstanceId))
             {
                 attacker.MovedThisTurn = true;
 
                 defender.Health -= attacker.Attack;
                 attacker.Health -= defender.Attack;
 
-                events.Add(new CardUpdatedEvent(0, attacker.CardInstanceId));
-                events.Add(new CardUpdatedEvent(0, defender.CardInstanceId));
-
-                if (defender.Health <= 0)
-
-                    events.Add(new CardDestroyedEvent(0, defender.CardInstanceId));
+                events.Add(new CardUpdatedEvent(GetCurrentPlayer().Id, attacker.CardInstanceId));
+                events.Add(new CardUpdatedEvent(GetNonCurrentPlayer().Id, defender.CardInstanceId));
 
                 if (attacker.Health <= 0)
-                    events.Add(new CardDestroyedEvent(0, attacker.CardInstanceId));
+                    events.Add(new CardDestroyedEvent(GetCurrentPlayer().Id, attacker.CardInstanceId));
+
+                if (defender.Health <= 0)
+                    events.Add(new CardDestroyedEvent(GetNonCurrentPlayer().Id, defender.CardInstanceId));
 
                 events.Add(new AttackEvent(attacker.CardInstanceId, defender.CardInstanceId));
             }
 
             return events;
         }
+
+        public bool CanAttackEnemy(int attackerInstanceId, int defenderInstanceId)
+        {
+            Player attackingPlayer = isFirstPlayerTurn ? firstPlayer : secondPlayer;
+            Player defendingPlayer = isFirstPlayerTurn ? secondPlayer : firstPlayer;
+
+            Card attackingCard = getCardByInstanceId(attackerInstanceId, attackingPlayer);
+            Card defendingCard = getCardByInstanceId(defenderInstanceId, defendingPlayer);
+
+            if (attackingCard == null || defendingCard == null || attackingCard.MovedThisTurn)
+                return false;
+
+            return true;
+        }
+
         #endregion
 
-        private Card getCardByInstanceId(int instanceId, Player player)
-        {
-            foreach (Card card in player.Deck)
-            {
-                if (card.CardInstanceId == instanceId)
-                    return card;
-            }
 
-            return null; // Card not found
-        }
+        #region Helpers
+
         private List<Card> createDeck(DeckData deckData, int ownerId)
         {
             List<Card> deck = new List<Card>();
@@ -297,6 +304,22 @@ namespace CardEngine
             return deck;
         }
 
+        public bool IsCardActiveOnBattlefield(int cardInstanceId)
+        {
+            Card card = GetCardByInstanceId(cardInstanceId);
+            if (card == null)
+            {
+                UnityEngine.Debug.LogWarning("Card not found");
+                return false;
+            }
+            return GetCurrentPlayer().Battlefield.Contains(card) && !card.MovedThisTurn;
+        }
+
+        public bool IsPlayerTurn(int playerId)
+        {
+            return GetCurrentPlayer().Id == playerId && isGameActive;
+        }
+
         private Player GetPlayerById(int playerId)
         {
             if (firstPlayer.Id == playerId)
@@ -306,6 +329,7 @@ namespace CardEngine
             return null;
         }
 
+        // Szuka karty o danym instanceId u obu graczy
         public Card GetCardByInstanceId(int instanceId)
         {
             Card card = getCardByInstanceId(instanceId, firstPlayer);
@@ -315,10 +339,25 @@ namespace CardEngine
             card = getCardByInstanceId(instanceId, secondPlayer);
             return card;
         }
-        
+        // Szuka karty o danym instanceId u podanego gracza
+        private Card getCardByInstanceId(int instanceId, Player player)
+        {
+            foreach (Card card in player.Deck)
+            {
+                if (card.CardInstanceId == instanceId)
+                    return card;
+            }
+
+            return null; // Card not found
+        }
         public Player GetCurrentPlayer()
         {
             return isFirstPlayerTurn ? firstPlayer : secondPlayer;
         }
+        public Player GetNonCurrentPlayer()
+        {
+            return isFirstPlayerTurn ? secondPlayer : firstPlayer;
+        }
+        #endregion
     }
 }

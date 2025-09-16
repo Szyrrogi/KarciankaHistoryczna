@@ -18,7 +18,7 @@ public class BattleManager : MonoBehaviour
 
     public static BattleManager battleManager;
 
-    public Game _game;
+    public Game Game;
 
     [HideInInspector]
     public List<GameObject> LocalPlayerHandCards;
@@ -57,7 +57,7 @@ public class BattleManager : MonoBehaviour
 
     [Header("Others")]
     public TextMeshProUGUI BannerText;
-    private Coroutine _bannerRoutine; 
+    private Coroutine _bannerRoutine;
 
     private float drawDuration = 0.5f; // czas animacji dobrania karty
     private float fanRadius = 5f;      // promień wachlarza
@@ -75,18 +75,21 @@ public class BattleManager : MonoBehaviour
         EnemyPlayerGraveyardCards = new List<GameObject>();
         EnemyPlayerBattlefieldCards = new List<GameObject>();
 
-        _game = new Game(localPlayerDeck, enemyPlayerDeck);
+        Game = new Game(localPlayerDeck, enemyPlayerDeck);
     }
 
     void Start()
     {
-        ProcessEvents(_game.HandleRequest(new StartGameRequest()));
+        ProcessEvents(Game.HandleRequest(new StartGameRequest()));
     }
 
 
+    #region Event Handlers
+    // Ta metoda wysyła eventy do gry i przetwarza zwrócone eventy gry
+    // Wywoływana przez UI lub inne skrypty
     public void SendRequestEvent(RequestEvent request)
     {
-        List<GameEvent> events = _game.HandleRequest(request);
+        List<GameEvent> events = Game.HandleRequest(request);
         ProcessEvents(events);
     }
 
@@ -141,8 +144,8 @@ public class BattleManager : MonoBehaviour
     }
 
     private void ProcessPutCardOnBattlefieldEvent(PutCardOnBattlefieldEvent putCard)
-    {   
-        
+    {
+
         // Local Player
         if (putCard.PlayerId == LOCAL_PLAYER_ID)
         {
@@ -152,7 +155,7 @@ public class BattleManager : MonoBehaviour
                 LocalPlayerHandCards.Remove(cardToPlay);
 
                 GameObject battlefieldCardObject = Instantiate(BattlefieldCardPrefab, LocalPlayerBattlefield.position, Quaternion.identity, LocalPlayerBattlefield);
-                battlefieldCardObject.GetComponent<BattlefieldCard>().Init(_game.GetCardByInstanceId(putCard.InstanceCardId));
+                battlefieldCardObject.GetComponent<BattlefieldCard>().Init(Game.GetCardByInstanceId(putCard.InstanceCardId));
 
                 LocalPlayerBattlefieldCards.Add(battlefieldCardObject);
 
@@ -175,7 +178,7 @@ public class BattleManager : MonoBehaviour
                 EnemyPlayerHandCards.Remove(cardToPlay);
 
                 GameObject battlefieldCardObject = Instantiate(BattlefieldCardPrefab, EnemyPlayerBattlefield.position, Quaternion.identity, EnemyPlayerBattlefield);
-                battlefieldCardObject.GetComponent<BattlefieldCard>().Init(_game.GetCardByInstanceId(putCard.InstanceCardId));
+                battlefieldCardObject.GetComponent<BattlefieldCard>().Init(Game.GetCardByInstanceId(putCard.InstanceCardId));
 
                 EnemyPlayerBattlefieldCards.Add(battlefieldCardObject);
 
@@ -221,7 +224,28 @@ public class BattleManager : MonoBehaviour
 
     private void ProcessCardDestroyedEvent(CardDestroyedEvent destroy)
     {
-        throw new NotImplementedException();
+        GameObject cardToDestroy = null;
+
+        if (destroy.PlayerId == LOCAL_PLAYER_ID)
+        {
+            cardToDestroy = LocalPlayerBattlefieldCards.Find(card => card.GetComponent<BattlefieldCard>().Card.CardInstanceId == destroy.InstanceCardId);
+            if (cardToDestroy != null)
+            {
+                LocalPlayerBattlefieldCards.Remove(cardToDestroy);
+                Destroy(cardToDestroy);
+                ArrangeLocalPlayerField();
+            }
+        }
+        else
+        {
+            cardToDestroy = EnemyPlayerBattlefieldCards.Find(card => card.GetComponent<BattlefieldCard>().Card.CardInstanceId == destroy.InstanceCardId);
+            if (cardToDestroy != null)
+            {
+                EnemyPlayerBattlefieldCards.Remove(cardToDestroy);
+                Destroy(cardToDestroy);
+                ArrangeEnemyField();
+            }
+        }
     }
 
     private void ProcessPlayerWonEvent(PlayerWonEvent win)
@@ -237,7 +261,7 @@ public class BattleManager : MonoBehaviour
             Quaternion rot = Quaternion.identity;
 
             GameObject handCardObject = Instantiate(HandCardPrefab, pos, rot, LocalPlayerDeck);
-            handCardObject.GetComponent<HandCard>().Init(_game.GetCardByInstanceId(draw.InstanceCardId));
+            handCardObject.GetComponent<HandCard>().Init(Game.GetCardByInstanceId(draw.InstanceCardId));
             handCardObject.GetComponent<DragCard>().Init();
 
             LocalPlayerHandCards.Add(handCardObject);
@@ -250,7 +274,7 @@ public class BattleManager : MonoBehaviour
             Quaternion rot = Quaternion.identity;
 
             GameObject handCardObject = Instantiate(HandCardPrefab, pos, rot, EnemyPlayerDeck);
-            handCardObject.GetComponent<HandCard>().Init(_game.GetCardByInstanceId(draw.InstanceCardId));
+            handCardObject.GetComponent<HandCard>().Init(Game.GetCardByInstanceId(draw.InstanceCardId));
             handCardObject.GetComponent<DragCard>().Init();
 
             EnemyPlayerHandCards.Add(handCardObject);
@@ -264,27 +288,20 @@ public class BattleManager : MonoBehaviour
         // Na razie nic nie robimy, zmiana życia itd jest obsługiwana w ProcessCardUpdatedEvent
     }
 
+    #endregion
 
+    #region Shared Methods i helpers
 
-    public void NextTurn()
+    // Metoda wywoływana w przycisku 
+    public void SendNextTurnRequest()
     {
-        SendRequestEvent(new EndTurnRequest(_game.GetCurrentPlayer().Id));
+        SendRequestEvent(new EndTurnRequest(Game.GetCurrentPlayer().Id));
     }
 
-    // public void PutOnBattlefild(GameObject card)
-    // {
-    //     DragCard.ChosenCard = null;
-    //     LocalPlayerUsedCards.Add(card);
-    //     LocalPlayerHandCards.Remove(card);
-    //     //card.transform.position = new Vector3(10000f,0,0); NIE DZIAŁA
-    //     GameObject newUnit = Instantiate(card.GetComponent<CardToPlay>().CardUnit, LocalPlayerBattlefield.position, Quaternion.identity);
-    //     LocalPlayerBattlefieldCards.Add(newUnit);
-    //     CopyStats(card.GetComponent<Card>(), newUnit.GetComponent<Card>());
-    //     card.SetActive(false);  //ZASTĘPSTWO
-    //     ArrangeHand();
-    //     ArrangeFild();
-    // }
 
+    #endregion
+
+    #region  UI Methods
     // Metody do wyswietlanie baneru, ktory przez kilka sekund pokazuje co sie stalo w grze, np. nowa tura, wygrana itp.
     private void ShowBanner(string message, float visibleSeconds = 2f)
     {
@@ -399,32 +416,6 @@ public class BattleManager : MonoBehaviour
 
             handCards[i].transform.SetPositionAndRotation(pos, rot);
         }
-
-        // private void ArrangeHand(bool isLocalPlayer)
-        // {
-        //     List<GameObject> handCards = isLocalPlayer ? LocalPlayerHandCards : EnemyPlayerHandCards;
-
-        //     int cardCount = handCards.Count;
-        //     if (cardCount == 0) return;
-
-        //     int i = 0;
-        //     foreach (GameObject card in handCards)
-        //     {
-        //         float offsetFromCenter = i - (cardCount - 1) / 2f;
-
-        //         float posX = LocalPlayerHand.position.x - (i - (cardCount - 1) / 2f) * fanRadius;
-        //         //float posZ = HandCenter.position.z - (i - (cardCount - 1) / 2f) * 0.3f;
-        //         float posZ = LocalPlayerHand.position.z + Mathf.Abs(offsetFromCenter) * 0.3f;
-        //         float rotationY = LocalPlayerHand.rotation.eulerAngles.y + (i - (cardCount - 1) / 2f) * fanAngle;
-
-        //         Vector3 pos = new Vector3(posX, LocalPlayerHand.position.y + i * 0.05f, posZ);
-        //         Vector3 rot = new Vector3(LocalPlayerHand.rotation.eulerAngles.x, rotationY, LocalPlayerHand.rotation.eulerAngles.z);
-
-        //         card.transform.position = pos;
-        //         card.transform.rotation = Quaternion.Euler(rot); // <-- zamiana na Quaternion
-        //         i++;
-
-        //     }
-        // }
     }
+    #endregion
 }

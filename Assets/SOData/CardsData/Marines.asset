@@ -16,7 +16,7 @@ MonoBehaviour:
   CardName: Marines
   Cost: 5
   Attack: 10
-  Health: 10
+  Health: 20
   Year: 1939
   Rarity: 0
   UnitType: 0

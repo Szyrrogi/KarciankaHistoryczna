@@ -7,6 +7,7 @@ using CardEngine;
 using TMPro;
 using Photon.Pun.Demo.PunBasics;
 using CardEngine.RequestEvents;
+using Unity.VisualScripting;
 public class BattlefieldCard : MonoBehaviour
 {
 
@@ -52,7 +53,7 @@ public class BattlefieldCard : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (Card.OwnerId == BattleManager.LOCAL_PLAYER_ID)
+        if (BattleManager.battleManager.Game.IsCardActiveOnBattlefield(Card.CardInstanceId))
         {
             selectedCard = this;
             currentArrow = Instantiate(arrowPrefab);
@@ -93,6 +94,7 @@ public class BattlefieldCard : MonoBehaviour
                 if (enemyCard != null && enemyCard.Card.OwnerId != Card.OwnerId) // Upewniamy się, że to karta przeciwnika
                 {
                     // Wysyłamy żądanie ataku do BattleManager
+                    Debug.Log($"Atak z {Card.CardInstanceId} na {enemyCard.Card.CardInstanceId}");
                     BattleManager.battleManager.SendRequestEvent(new AttackUnitRequest(Card.CardInstanceId, enemyCard.Card.CardInstanceId));
                 }
             }

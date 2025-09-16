@@ -38,8 +38,7 @@ public class DragCard : MonoBehaviour
     }
     void OnMouseEnter() //powiększa
     {
-
-        if (ChosenCard == null && isDragging == false && handCards.Contains(this.gameObject))
+        if (BattleManager.battleManager.Game.IsPlayerTurn(card.OwnerId) && ChosenCard == null && isDragging == false && handCards.Contains(this.gameObject))
         {
             ChosenCard = this.gameObject;
 
@@ -82,7 +81,7 @@ public class DragCard : MonoBehaviour
 
     void OnMouseDown()  //klikniaesz
     {
-        if (handCards.Contains(this.gameObject))
+        if (BattleManager.battleManager.Game.IsPlayerTurn(card.OwnerId) && handCards.Contains(this.gameObject))
         {
             isDragging = true;
             OnMouseExit();
