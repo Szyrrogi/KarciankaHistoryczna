@@ -6,7 +6,9 @@ using UnityEngine;
 
 public class DragCard : MonoBehaviour
 {
-    //private GameObject battlefield;       // Pole, do którego karta ma się przyciągnąć
+    private Card card;
+    private Transform battlefield;       // Pole, do którego karta ma się przyciągnąć
+    private List<GameObject> handCards;       // Pole, do którego karta ma się przyciągnąć
     private float snapDistanceX = 24f; // Maksymalna odległość przyciągania w osi X
     private float snapDistanceZ = 3.5f; // Maksymalna odległość przyciągania w osi Z
 
@@ -25,11 +27,19 @@ public class DragCard : MonoBehaviour
         //battlefield = BattleManager.battleManager.LocalPlayerBattlefield?.gameObject;
         mainCamera = Camera.main;
     }
+
+    // Należy wywołać po HandCard.Init()
+    public void Init()
+    {
+        HandCard handCard = GetComponent<HandCard>();
+        battlefield = handCard.Card.OwnerId == BattleManager.LOCAL_PLAYER_ID ? BattleManager.battleManager.LocalPlayerBattlefield : BattleManager.battleManager.EnemyPlayerBattlefield;
+        handCards = handCard.Card.OwnerId == BattleManager.LOCAL_PLAYER_ID ? BattleManager.battleManager.LocalPlayerHandCards : BattleManager.battleManager.EnemyPlayerHandCards;
+        card = handCard.Card;
+    }
     void OnMouseEnter() //powiększa
     {
-        List<GameObject> HandCards = BattleManager.battleManager.LocalPlayerHandCards.Contains(this.gameObject) ? BattleManager.battleManager.LocalPlayerHandCards : BattleManager.battleManager.EnemyPlayerHandCards;
 
-        if (ChosenCard == null && isDragging == false && HandCards.Contains(this.gameObject))
+        if (ChosenCard == null && isDragging == false && handCards.Contains(this.gameObject))
         {
             ChosenCard = this.gameObject;
 
@@ -72,7 +82,7 @@ public class DragCard : MonoBehaviour
 
     void OnMouseDown()  //klikniaesz
     {
-        if(BattleManager.battleManager.LocalPlayerHandCards.Contains(this.gameObject) ? BattleManager.battleManager.LocalPlayerHandCards.Contains(this.gameObject) : BattleManager.battleManager.EnemyPlayerHandCards.Contains(this.gameObject))
+        if (handCards.Contains(this.gameObject))
         {
             isDragging = true;
             OnMouseExit();
@@ -81,15 +91,12 @@ public class DragCard : MonoBehaviour
 
     void OnMouseUp()    //spada
     {
-        GameObject battlefield = BattleManager.battleManager.LocalPlayerHandCards.Contains(this.gameObject) ? BattleManager.battleManager.LocalPlayerBattlefield?.gameObject : BattleManager.battleManager.EnemyPlayerBattlefield?.gameObject;
 
         isDragging = false;
 
         // Liczymy różnicę w X i Z
-        float diffX = Mathf.Abs(transform.position.x - battlefield.transform.position.x);
-        float diffZ = Mathf.Abs(transform.position.z - battlefield.transform.position.z);
-
-        
+        float diffX = Mathf.Abs(transform.position.x - battlefield.position.x);
+        float diffZ = Mathf.Abs(transform.position.z - battlefield.position.z);
 
         // Debug w konsoli ile brakuje
         Debug.Log($"Odległość X: {diffX:F3}, Odległość Z: {diffZ:F3}");
@@ -97,10 +104,10 @@ public class DragCard : MonoBehaviour
         // Sprawdzamy, czy mieści się w zakresie przyciągania
         if (diffX <= snapDistanceX && diffZ <= snapDistanceZ)
         {
-            BattleManager.battleManager.SendRequestEvent(new PutCardOnBattlefieldRequest(GetComponent<HandCard>().InstanceId));
+            BattleManager.battleManager.SendRequestEvent(new PutCardOnBattlefieldRequest(card.CardInstanceId));
            // BattleManager.battleManager.PutOnBattlefild(this.gameObject);
         }
-        BattleManager.battleManager.ArrangeHand(isLocalPlayer: this.GetComponent<HandCard>().Card.OwnerId == BattleManager.LOCAL_PLAYER_ID);
+        BattleManager.battleManager.ArrangeHand(isLocalPlayer: card.OwnerId == BattleManager.LOCAL_PLAYER_ID);
     }
 
     void Update()   //ruszać
@@ -114,20 +121,6 @@ public class DragCard : MonoBehaviour
                 Vector3 hitPoint = ray.GetPoint(distance);
                 transform.position = new Vector3(hitPoint.x, transform.position.y, hitPoint.z);
             }
-
-
-    //         float diffX = Mathf.Abs(transform.position.x - pole.transform.position.x);
-    //         float diffZ = Mathf.Abs(transform.position.z - pole.transform.position.z);
-    //         // Zielony
-    //         if (diffX <= snapDistanceX && diffZ <= snapDistanceZ)
-    //         {
-    //             pole.GetComponent<Renderer>().material.color =  new Color(0, 1f, 0, 0.5f);
-    //         }
-    //         else
-    //         {
-    //             pole.GetComponent<Renderer>().material.color = Color.white;
-    //         }
-
         }
     }
 }

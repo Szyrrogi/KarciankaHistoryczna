@@ -193,6 +193,7 @@ namespace CardEngine
                 events.AddRange(DrawCard(firstPlayer));
                 events.AddRange(DrawCard(secondPlayer));
             }
+            events.Add(new GameStartedEvent());
 
             return events;
         }
@@ -227,7 +228,7 @@ namespace CardEngine
             }
 
             //Nowy gracz dobiera kartę
-            events.Add(new TurnEndEvent(currentPlayer.Id));
+            events.Add(new NewTurnEvent(currentPlayer.Id));
             events.AddRange(DrawCard(currentPlayer));
             return events;
         }
@@ -315,7 +316,7 @@ namespace CardEngine
             return card;
         }
         
-        private Player GetCurrentPlayer()
+        public Player GetCurrentPlayer()
         {
             return isFirstPlayerTurn ? firstPlayer : secondPlayer;
         }

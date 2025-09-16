@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace CardEngine
 {
-    class Player
+    public class Player
     {
         public int Id { get; set; }
         public List<Card> Deck { get; set; }

@@ -17,13 +17,15 @@ public class HandCard : MonoBehaviour
     public TextMeshProUGUI YearText;
     public Image CardImage;
 
-    public int InstanceId { get; private set; }
-
 
     public void Init(Card data)
     {
         Card = data;
-        InstanceId = Card.CardInstanceId;
+        UpdateCardUI();
+    }
+
+    public void UpdateCardUI()
+    {
 
         HealthText.text = Card.Health.ToString();
         AttackText.text = Card.Attack.ToString();
@@ -32,6 +34,7 @@ public class HandCard : MonoBehaviour
         NameText.text = Card.CardName;
         CardImage.sprite = Card.CardSprite;
     }
+
     protected virtual void Start()
     {
     }

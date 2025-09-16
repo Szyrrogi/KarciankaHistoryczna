@@ -5,6 +5,7 @@ using CardEngine;
 using CardEngine.GameEvents;
 using CardEngine.RequestEvents;
 using JetBrains.Annotations;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
@@ -17,7 +18,7 @@ public class BattleManager : MonoBehaviour
 
     public static BattleManager battleManager;
 
-    private Game _game;
+    public Game _game;
 
     [HideInInspector]
     public List<GameObject> LocalPlayerHandCards;
@@ -54,6 +55,9 @@ public class BattleManager : MonoBehaviour
     public DeckData localPlayerDeck;
     public DeckData enemyPlayerDeck;
 
+    [Header("Others")]
+    public TextMeshProUGUI BannerText;
+    private Coroutine _bannerRoutine; 
 
     private float drawDuration = 0.5f; // czas animacji dobrania karty
     private float fanRadius = 5f;      // promień wachlarza
@@ -96,6 +100,9 @@ public class BattleManager : MonoBehaviour
                 case AttackEvent attack:
                     ProcessAttackEvent(attack);
                     break;
+                case GameStartedEvent gameStarted:
+                    ProcessAttackEvent();
+                    break;
 
                 case DrawCardEvent draw:
                     ProcessDrawCardEvent(draw);
@@ -113,8 +120,8 @@ public class BattleManager : MonoBehaviour
                     ProcessCardUpdatedEvent(update);
                     break;
 
-                case TurnEndEvent turnEnd:
-                    ProcessTurnEndEvent(turnEnd);
+                case NewTurnEvent turnEnd:
+                    ProcessNewTurnEvent(turnEnd);
                     break;
 
                 case PutCardOnBattlefieldEvent putCard:
@@ -128,13 +135,18 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    private void ProcessAttackEvent()
+    {
+        ShowBanner("Game Started!");
+    }
+
     private void ProcessPutCardOnBattlefieldEvent(PutCardOnBattlefieldEvent putCard)
     {   
         
         // Local Player
         if (putCard.PlayerId == LOCAL_PLAYER_ID)
         {
-            GameObject cardToPlay = LocalPlayerHandCards.Find(card => card.GetComponent<HandCard>().InstanceId == putCard.InstanceCardId);
+            GameObject cardToPlay = LocalPlayerHandCards.Find(card => card.GetComponent<HandCard>().Card.CardInstanceId == putCard.InstanceCardId);
             if (cardToPlay != null)
             {
                 LocalPlayerHandCards.Remove(cardToPlay);
@@ -157,7 +169,7 @@ public class BattleManager : MonoBehaviour
         // Enemy Player
         else
         {
-            GameObject cardToPlay = EnemyPlayerHandCards.Find(card => card.GetComponent<HandCard>().InstanceId == putCard.InstanceCardId);
+            GameObject cardToPlay = EnemyPlayerHandCards.Find(card => card.GetComponent<HandCard>().Card.CardInstanceId == putCard.InstanceCardId);
             if (cardToPlay != null)
             {
                 EnemyPlayerHandCards.Remove(cardToPlay);
@@ -169,8 +181,8 @@ public class BattleManager : MonoBehaviour
 
                 Destroy(cardToPlay);
 
-                ArrangeLocalPlayerHand();
-                ArrangeLocalPlayerField();
+                ArrangeEnemyHand();
+                ArrangeEnemyField();
             }
             else
             {
@@ -179,9 +191,9 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    private void ProcessTurnEndEvent(TurnEndEvent turnEnd)
+    private void ProcessNewTurnEvent(NewTurnEvent turnEnd)
     {
-        throw new NotImplementedException();
+        ShowBanner($"Player {turnEnd.PlayerId} Turn Started");
     }
 
     private void ProcessCardUpdatedEvent(CardUpdatedEvent update)
@@ -226,6 +238,7 @@ public class BattleManager : MonoBehaviour
 
             GameObject handCardObject = Instantiate(HandCardPrefab, pos, rot, LocalPlayerDeck);
             handCardObject.GetComponent<HandCard>().Init(_game.GetCardByInstanceId(draw.InstanceCardId));
+            handCardObject.GetComponent<DragCard>().Init();
 
             LocalPlayerHandCards.Add(handCardObject);
 
@@ -238,6 +251,7 @@ public class BattleManager : MonoBehaviour
 
             GameObject handCardObject = Instantiate(HandCardPrefab, pos, rot, EnemyPlayerDeck);
             handCardObject.GetComponent<HandCard>().Init(_game.GetCardByInstanceId(draw.InstanceCardId));
+            handCardObject.GetComponent<DragCard>().Init();
 
             EnemyPlayerHandCards.Add(handCardObject);
 
@@ -252,14 +266,10 @@ public class BattleManager : MonoBehaviour
 
 
 
-    // public void NextTurn()
-    // {
-    //     StartCoroutine(DrawMultipleCards(1));
-    //     foreach (GameObject card in LocalPlayerBattlefieldCards)
-    //     {
-    //         card.GetComponent<CardUnit>().NextTurn();
-    //     }
-    // }
+    public void NextTurn()
+    {
+        SendRequestEvent(new EndTurnRequest(_game.GetCurrentPlayer().Id));
+    }
 
     // public void PutOnBattlefild(GameObject card)
     // {
@@ -275,7 +285,21 @@ public class BattleManager : MonoBehaviour
     //     ArrangeFild();
     // }
 
+    // Metody do wyswietlanie baneru, ktory przez kilka sekund pokazuje co sie stalo w grze, np. nowa tura, wygrana itp.
+    private void ShowBanner(string message, float visibleSeconds = 2f)
+    {
+        if (_bannerRoutine != null) StopCoroutine(_bannerRoutine);
+        BannerText.gameObject.SetActive(true);
+        BannerText.text = message;
+        _bannerRoutine = StartCoroutine(HideBannerAfter(visibleSeconds));
+    }
 
+    private IEnumerator HideBannerAfter(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        BannerText.gameObject.SetActive(false);
+        _bannerRoutine = null;
+    }
 
 
     public IEnumerator DrawEnemyCardAnimation(GameObject card)
@@ -311,7 +335,7 @@ public class BattleManager : MonoBehaviour
         ArrangeField(isLocalPlayer: true);
     }
 
-    public void ArrangeLEnemyField()
+    public void ArrangeEnemyField()
     {
         ArrangeField(isLocalPlayer: false);
     }
